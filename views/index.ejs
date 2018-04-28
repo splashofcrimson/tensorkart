@@ -28,38 +28,38 @@
     var game = new Phaser.Game(config);
     var car;
     var cursors;
-
+    var turnOnSpikes = 0;
 
     function preload ()
     {
-    this.load.image('le_road', './assets/le_road.png');
+    this.load.image('le_road', './assets/le_road.png')
     this.load.image('green_car', './assets/green_car.png')
+    this.load.image('spikes', './assets/spikes.png')
     }
 
     function create ()
     {
         
         this.add.image(700, 500, 'le_road');
-        car = this.physics.add.sprite(300,300,'green_car');
+        car = this.physics.add.sprite(300,600,'green_car');
+
+        this.physics.add.collider(car, spikes);
+
         cursors = this.input.keyboard.createCursorKeys();
-       // this.game.stage.backgroundColor = "#ffffff"
 
-        // var particles = this.add.particles('red');
+        this.time.events.loop(Phaser.Timer.SECOND + (Math.random() * 20) , renderSpikes(), this);
 
-        // var emitter = particles.createEmitter({
-        //     speed: 100,
-        //     scale: { start: 1, end: 0 },
-        //     blendMode: 'ADD'
-        // });
+        if (turnOnSpikes == 1){
+            turnOnSpikes = 0
+            xVal = (Math.random() * 750) + 300
+            var spikes = this.physics.add.sprite(xVal, 0, 'spikes');
+            spikes.setVelocityY(300)
+        }
 
-        // var logo = this.physics.add.image(400, 100, 'logo');
+    }
 
-        // logo.setVelocity(100, 200);
-        // logo.setBounce(1, 1);
-        // logo.setCollideWorldBounds(true);
-
-        // emitter.startFollow(logo);
-
+    function renderSpikes(){
+        turnOnSpikes = 1
     }
 
     function update(){
