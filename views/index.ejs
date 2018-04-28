@@ -28,7 +28,7 @@
     var game = new Phaser.Game(config);
     var car;
     var cursors;
-    var turnOnSpikes = 0;
+    var turnOnSpikes;
 
     function preload ()
     {
@@ -43,24 +43,27 @@
         this.add.image(700, 500, 'le_road');
         car = this.physics.add.sprite(300,600,'green_car');
 
-        this.physics.add.collider(car, spikes);
+        timedEvent = this.time.addEvent({
+            delay: 1500,
+            callback: renderSpikes,
+            callbackScope: this,
+            loop: true
+        })
 
         cursors = this.input.keyboard.createCursorKeys();
-
-        this.time.events.loop(Phaser.Timer.SECOND + (Math.random() * 20) , renderSpikes(), this);
-
-        if (turnOnSpikes == 1){
-            turnOnSpikes = 0
-            xVal = (Math.random() * 750) + 300
-            var spikes = this.physics.add.sprite(xVal, 0, 'spikes');
-            spikes.setVelocityY(300)
-        }
 
     }
 
     function renderSpikes(){
-        turnOnSpikes = 1
+        console.log("hello")
+        xVal = (Math.random() * 750) + 300
+        var spikes = this.physics.add.sprite(xVal, 0, 'spikes')
+        spikes.setVelocityY(300)
+        this.physics.add.collider(car, spikes);
+        spikes.setCollideCallback(collide, this);
     }
+
+
 
     function update(){
         if(cursors.left.isDown){
@@ -69,10 +72,16 @@
         else if (cursors.right.isDown){
             car.setVelocityX(700)
         }
+        else if (cursors.up.isDown){
+            car.setVelocityY(-700)
+        }
+        else if (cursors.down.isDown){
+            car.setVelocityY(700)
+        }
         else {
             car.setVelocityX(0)
+            car.setVelocityY(0)
         }
-
     }
     </script>
 
