@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var tf = require('./node_modules/@tensorflow/tfjs/dist');
 
 var app = express();
 
@@ -22,9 +23,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.get('/',function(req,res){
-    res.render(__dirname+'/views/index');
+app.get('/', function(req, res) {
+  res.render(__dirname + '/views/index');
 });
 app.use('/users', users);
 
