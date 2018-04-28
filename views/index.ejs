@@ -26,6 +26,7 @@
     };
 
     var game = new Phaser.Game(config);
+    const CONTROLS = ['up', 'down', 'left', 'right', 'fist', 'palm']
     var car;
     var cursors;
     var bl;
@@ -36,6 +37,7 @@
     var br_top;
     var accel;
     var spikes = [];
+    var boosting = {value: 0};
 
 
     function preload ()
@@ -44,11 +46,13 @@
     this.load.image('green_car', './assets/green_car.png');
     //this.load.spritesheet('background_left', 'assets/sprite_sheet_left.png', 6, 21, 22);
     this.load.image('background_left', './assets/nav_ideal.png');
-    
+
     this.load.image('background_right', './assets/nav_idear.png');
     var turnOnSpikes;
     this.load.image('spikes', './assets/spikes.png')
+    this.load.image('star', './assets/star.png')
     this.load.image('nuke', './assets/platformIndustrial_106.png')
+    this.load.image('oil', './assets/oil.png')
     }
 
     function create ()
@@ -65,11 +69,11 @@
 
         this.add.image(700, 500, 'le_road');
         bl = this.physics.add.sprite(140,475,'background_left').setScale(0.7,0.7);
-        br = this.physics.add.sprite(1250,475,'background_right').setScale(0.7,0.7); 
+        br = this.physics.add.sprite(1250,475,'background_right').setScale(0.7,0.7);
         bl_top = this.physics.add.sprite(140,0,'background_left').setScale(0.7,0.7);
         br_top = this.physics.add.sprite(1250,0,'background_right').setScale(0.7,0.7);
         bl_bot = this.physics.add.sprite(140,950,'background_left').setScale(0.7,0.7);
-        br_bot = this.physics.add.sprite(1250,950,'background_right').setScale(0.7,0.7);  
+        br_bot = this.physics.add.sprite(1250,950,'background_right').setScale(0.7,0.7);
         car = this.physics.add.sprite(700, 475,'green_car');
         cursors = this.input.keyboard.createCursorKeys();
         car.setCollideWorldBounds(true);
@@ -90,6 +94,19 @@
             loop: true
         })
 
+        starev = this.time.addEvent({
+            delay: 3000,
+            callback: renderStar,
+            callbackScope: this,
+            loop: true
+        })
+
+        oilev = this.time.addEvent({
+            delay: 1000,
+            callback: renderOil,
+            callbackScope: this,
+            loop: true
+        })
         cursors = this.input.keyboard.createCursorKeys();
 
     }
@@ -103,16 +120,62 @@
         spikes.push(spike)
     }
 
+    function renderStar(){
+        console.log("star")
+        xVal = (Math.random() * 750) + 300
+        var star = this.physics.add.sprite(xVal, -100, 'star')
+        star.setVelocityY(700)
+        this.physics.add.collider(car, star, onStar);
+        //star.push(star)
+    }
+
+    function renderOil(){
+        console.log("oil")
+        xVal = (Math.random() * 750) + 300
+        var oil = this.physics.add.sprite(xVal, -100, 'oil')
+        oil.setVelocityY(700)
+        this.physics.add.collider(car, oil, onOil);
+        //star.push(star)
+    }
+
+    function onOil(a,b){
+      b.destroy()
+      //let devId = document.getElementById('header').innerHTML;
+      if(true){
+          car.setVelocityY(+60);
+          bl.setVelocityY(0);
+          br.setVelocityY(0);
+          bl_top.setVelocityY(0);
+          br_top.setVelocityY(0);
+          bl_bot.setVelocityY(0);
+          br_bot.setVelocityY(0);
+          boosting.value = -1;
+          setTimeout(function(){ boosting.value = 0}, 1000);
+      }
+    }
+
+    function onStar(a,b){
+      b.destroy()
+      //let devId = document.getElementById('header').innerHTML;
+      if(true){
+          car.setVelocityY(-60);
+          bl.setVelocityY(100);
+          br.setVelocityY(100);
+          bl_top.setVelocityY(100);
+          br_top.setVelocityY(100);
+          bl_bot.setVelocityY(100);
+          br_bot.setVelocityY(100);
+          boosting.value = 1;
+          setTimeout(function(){ boosting.value = 0}, 3000);
+      }
+    }
+
     function nuke(){
         console.log("nuke")
         xVal = (Math.random() * 750) + 300
         var nuke = this.physics.add.sprite(xVal, 0, 'nuke')
         nuke.setVelocityY(300)
-        if (spikes.length > 0){
-            for (var i = 0; i < spikes.length; i++){
-                spikes[i].destroy();
-            }
-        }
+
 
     }
 
@@ -120,9 +183,6 @@
 
     function update(){
 
-
-        console.log(bl.y)
-        console.log(temp);
         if(temp + 450 <= bl.y){
             bl_bot.y = bl_top.y -475;
             br_bot.y = br_top.y -475;
@@ -135,7 +195,7 @@
             bl_top = swap;
             br_top = swap1;
             temp = bl.y}
-           
+
         if(cursors.left.isDown){
            // mysprite.anims.play('left',true);
             if (car.x < 320) {
@@ -151,15 +211,23 @@
             }
             else{
              car.setVelocityX(700)
-            
+
         }}
         else if(accel.isDown){
             car.setVelocityY(-60);
             console.log("help where is accel");
         }
         else {
+
+
+          if(boosting.value != 0){
+            if(boosting.value != -1){
+              car.setVelocityX(0);
+            }
+            return;
+          } else {
             car.setVelocityX(0);
-            bl.setVelocityX(0);
+          }
             bl.setVelocityY(0);
             br.setVelocityX(0);
             br.setVelocityY(0);
@@ -170,6 +238,9 @@
             car.setVelocityY(0)
         }
         if (car.x < 320 || car.x > 1000) {
+          if(boosting.value != 0){
+            return;
+          }
             bl.setVelocityY(100);
             br.setVelocityY(100);
             bl_top.setVelocityY(100);
