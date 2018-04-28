@@ -2,14 +2,16 @@
 <html>
 <head>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.0.0/dist/phaser.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./javascripts/tf.js"></script>
 </head>
 <body>
 
     <script>
     var config = {
         type: Phaser.AUTO,
-        width: 800,
-        height: 600,
+        width: 1000,
+        height: 800,
         physics: {
             default: 'arcade',
             arcade: {
@@ -31,10 +33,13 @@
     {
         this.load.image('sky', './assets/sky.png')
         this.load.image('green_car', './assets/car_green_small_5.png')
+        this.load.tilemap('map', 'assets/the_road..csv')
     }
 
     function create ()
     {
+        
+        this.add.image(800, 600, 'sky');
 
         this.add.image(400, 300, 'sky');
         car = this.physics.add.sprite(300, 300, 'green_car')

@@ -26,6 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/',function(req,res){
     res.render(__dirname+'/views/index');
 });
+app.get('/camera',function(req,res){
+    res.render(__dirname+'/views/index2');
+});
 app.use('/users', users);
 
 // catch 404 and forward to error handler
