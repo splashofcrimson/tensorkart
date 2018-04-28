@@ -44,6 +44,8 @@
     this.load.image('background_left', './assets/nav_ideal.png');
     
     this.load.image('background_right', './assets/nav_idear.png');
+    var turnOnSpikes;
+    this.load.image('spikes', './assets/spikes.png')
     }
 
     function create ()
@@ -69,26 +71,28 @@
         cursors = this.input.keyboard.createCursorKeys();
         car.setCollideWorldBounds(true);
        temp = bl.y
-   
-       // this.game.stage.backgroundColor = "#ffffff"
 
-        // var particles = this.add.particles('red');
+        timedEvent = this.time.addEvent({
+            delay: 1500,
+            callback: renderSpikes,
+            callbackScope: this,
+            loop: true
+        })
 
-        // var emitter = particles.createEmitter({
-        //     speed: 100,
-        //     scale: { start: 1, end: 0 },
-        //     blendMode: 'ADD'
-        // });
-
-        // var logo = this.physics.add.image(400, 100, 'logo');
-
-        // logo.setVelocity(100, 200);
-        // logo.setBounce(1, 1);
-        // logo.setCollideWorldBounds(true);
-
-        // emitter.startFollow(logo);
+        cursors = this.input.keyboard.createCursorKeys();
 
     }
+
+    function renderSpikes(){
+        console.log("hello")
+        xVal = (Math.random() * 750) + 300
+        var spikes = this.physics.add.sprite(xVal, 0, 'spikes')
+        spikes.setVelocityY(300)
+        this.physics.add.collider(car, spikes);
+        spikes.setCollideCallback(collide, this);
+    }
+
+
 
     function update(){
 
@@ -161,6 +165,12 @@
             br_bot.setVelocityY(-700);
         }
         }
+        else if (cursors.up.isDown){
+            car.setVelocityY(-700)
+        }
+        else if (cursors.down.isDown){
+            car.setVelocityY(700)
+        }
         else {
             car.setVelocityX(0);
             bl.setVelocityX(0);
@@ -171,8 +181,8 @@
             br_top.setVelocityY(0);
             bl_bot.setVelocityY(0);
             br_bot.setVelocityY(0);
+            car.setVelocityY(0)
         }
-
     }
     </script>
 
