@@ -18,23 +18,30 @@
         },
         scene: {
             preload: preload,
-            create: create
+            create: create,
+            update: update
         }
     };
 
     var game = new Phaser.Game(config);
+    var cursors;
+    var car;
 
     function preload ()
     {
         this.load.image('sky', './assets/sky.png')
+        this.load.image('taxi', './assets/taxi_NE.png')
     }
 
     function create ()
     {
 
         this.add.image(400, 300, 'sky');
+        car = this.physics.add.sprite(300, 300, 'taxi')
 
-        this.game.stage.backgroundColor = "#ffffff"
+        cursors = this.input.keyboard.createCursorKeys();
+
+        // this.add.image(400, 300, 'sky');
 
         // var particles = this.add.particles('red');
 
@@ -51,6 +58,19 @@
         // logo.setCollideWorldBounds(true);
 
         // emitter.startFollow(logo);
+
+    }
+
+    function update (){
+        if (cursors.left.isDown){
+            car.setVelocityX(-100)
+        }
+        else if (cursors.right.isDown){
+            car.setVelocityX(100)
+        }
+        else{
+            car.setVelocityX(0)
+        }
 
     }
     </script>
