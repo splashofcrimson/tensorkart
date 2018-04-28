@@ -28,20 +28,48 @@
     var game = new Phaser.Game(config);
     var car;
     var cursors;
+    var bl;
+    var br;
+    var bl_bot;
+    var br_bot;
+    var bl_top;
+    var br_top;
 
 
     function preload ()
     {
     this.load.image('le_road', './assets/le_road.png');
-    this.load.image('green_car', './assets/green_car.png')
+    this.load.image('green_car', './assets/green_car.png');
+    //this.load.spritesheet('background_left', 'assets/sprite_sheet_left.png', 6, 21, 22);
+    this.load.image('background_left', './assets/nav_ideal.png');
+    
+    this.load.image('background_right', './assets/nav_idear.png');
     }
 
     function create ()
     {
-        
+        //  mysprite = this.add.sprite(15, 30, 'background_left');
+         // mysprite.animations.add('scroll');
+         // mysprite.animations.play('scroll', 50, true);
+         /*this.anims.create({
+            key:'left',
+            frames:this.anims.generateFrameNumbers('background_left', {start:0, end:20}),
+            frameRate: 10,
+            repeat: 3,
+        })*/
+
         this.add.image(700, 500, 'le_road');
-        car = this.physics.add.sprite(300,300,'green_car');
+        bl = this.physics.add.sprite(140,475,'background_left').setScale(0.7,0.7);
+        br = this.physics.add.sprite(1250,475,'background_right').setScale(0.7,0.7); 
+        bl_top = this.physics.add.sprite(140,0,'background_left').setScale(0.7,0.7);
+        br_top = this.physics.add.sprite(1250,0,'background_right').setScale(0.7,0.7);
+        bl_bot = this.physics.add.sprite(140,950,'background_left').setScale(0.7,0.7);
+        br_bot = this.physics.add.sprite(1250,950,'background_right').setScale(0.7,0.7);  
+        car = this.physics.add.sprite(700, 475,'green_car');
         cursors = this.input.keyboard.createCursorKeys();
+        car.setCollideWorldBounds(true);
+       temp = bl.y
+   
        // this.game.stage.backgroundColor = "#ffffff"
 
         // var particles = this.add.particles('red');
@@ -63,14 +91,86 @@
     }
 
     function update(){
+
+
+        console.log(bl.y)
+        console.log(temp);
+        if(temp + 450 <= bl.y){
+            bl_bot.y = bl_top.y -475;
+            br_bot.y = br_top.y -475;
+            swap = bl_bot;
+            swap1 = br_bot;
+            bl_bot = bl;
+            br_bot = br;
+            bl = bl_top;
+            br = br_top;
+            bl_top = swap;
+            br_top = swap1;
+            temp = bl.y}
+           
         if(cursors.left.isDown){
-            car.setVelocityX(-700)
+           // mysprite.anims.play('left',true);
+            if (car.x < 320) {
+             car.setVelocityX(-50)
+            }
+            else{
+             car.setVelocityX(-700)
+            }
         }
         else if (cursors.right.isDown){
-            car.setVelocityX(700)
+            if (car.x > 1100) {
+             car.setVelocityX(50)
+            }
+            else{
+             car.setVelocityX(700)
+            
+        }}
+        else if (cursors.up.isDown){
+            if (car.x < 320 || car.x > 1000) {
+            bl.setVelocityY(100);
+            br.setVelocityY(100);
+            bl_top.setVelocityY(100);
+            br_top.setVelocityY(100);
+            bl_bot.setVelocityY(100);
+            br_bot.setVelocityY(100);
+            }
+            else{
+            bl.setVelocityY(700);
+            br.setVelocityY(700);
+            bl_top.setVelocityY(700);
+            br_top.setVelocityY(700);
+            bl_bot.setVelocityY(700);
+            br_bot.setVelocityY(700);
+        }
+        }
+        else if (cursors.down.isDown){
+            if (car.x < 320 || car.x > 1000) {
+            bl.setVelocityY(-100);
+            br.setVelocityY(-100);
+            bl_top.setVelocityY(-100);
+            br_top.setVelocityY(-100);
+            bl_bot.setVelocityY(-100);
+            br_bot.setVelocityY(-100);
+            }
+            else{
+            bl.setVelocityY(-700);
+            br.setVelocityY(-700);
+            bl_top.setVelocityY(-700);
+            br_top.setVelocityY(-700);
+            bl_bot.setVelocityY(-700);
+            br_bot.setVelocityY(-700);
+        }
         }
         else {
-            car.setVelocityX(0)
+            car.setVelocityX(0);
+            bl.setVelocityX(0);
+            bl.setVelocityY(0);
+            br.setVelocityX(0);
+            br.setVelocityY(0);
+            bl_top.setVelocityY(0);
+            br_top.setVelocityY(0);
+            bl_bot.setVelocityY(0);
+            br_bot.setVelocityY(0);
         }
 
     }
