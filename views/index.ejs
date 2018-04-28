@@ -35,6 +35,7 @@
     var bl_top;
     var br_top;
     var accel;
+    var spikes = [];
 
 
     function preload ()
@@ -47,6 +48,7 @@
     this.load.image('background_right', './assets/nav_idear.png');
     var turnOnSpikes;
     this.load.image('spikes', './assets/spikes.png')
+    this.load.image('nuke', './assets/platformIndustrial_106.png')
     }
 
     function create ()
@@ -81,6 +83,13 @@
             loop: true
         })
 
+        timedEvent2 = this.time.addEvent({
+            delay: 10000,
+            callback: nuke,
+            callbackScope: this,
+            loop: true
+        })
+
         cursors = this.input.keyboard.createCursorKeys();
 
     }
@@ -88,9 +97,23 @@
     function renderSpikes(){
         console.log("hello")
         xVal = (Math.random() * 750) + 300
-        var spikes = this.physics.add.sprite(xVal, 0, 'spikes')
-        spikes.setVelocityY(300)
-        this.physics.add.collider(car, spikes);
+        var spike = this.physics.add.sprite(xVal, -100, 'spikes')
+        spike.setVelocityY(300)
+        this.physics.add.collider(car, spike);
+        spikes.push(spike)
+    }
+
+    function nuke(){
+        console.log("nuke")
+        xVal = (Math.random() * 750) + 300
+        var nuke = this.physics.add.sprite(xVal, 0, 'nuke')
+        nuke.setVelocityY(300)
+        if (spikes.length > 0){
+            for (var i = 0; i < spikes.length; i++){
+                spikes[i].destroy();
+            }
+        }
+
     }
 
 
@@ -130,41 +153,6 @@
              car.setVelocityX(700)
             
         }}
-        else if (cursors.up.isDown){
-            if (car.x < 320 || car.x > 1000) {
-            bl.setVelocityY(100);
-            br.setVelocityY(100);
-            bl_top.setVelocityY(100);
-            br_top.setVelocityY(100);
-            bl_bot.setVelocityY(100);
-            br_bot.setVelocityY(100);
-            }
-            else{
-            bl.setVelocityY(700);
-            br.setVelocityY(700);
-            bl_top.setVelocityY(700);
-            br_top.setVelocityY(700);
-            bl_bot.setVelocityY(700);
-            br_bot.setVelocityY(700);
-        }
-        }
-        else if (cursors.down.isDown){
-            if (car.x < 320 || car.x > 1000) {
-            bl.setVelocityY(-100);
-            br.setVelocityY(-100);
-            bl_top.setVelocityY(-100);
-            br_top.setVelocityY(-100);
-            bl_bot.setVelocityY(-100);
-            br_bot.setVelocityY(-100);
-            }
-            else{
-            bl.setVelocityY(-700);
-            br.setVelocityY(-700);
-            bl_top.setVelocityY(-700);
-            br_top.setVelocityY(-700);
-            bl_bot.setVelocityY(-700);
-            br_bot.setVelocityY(-700);
-        }}
         else if(accel.isDown){
             car.setVelocityY(-60);
             console.log("help where is accel");
@@ -180,6 +168,22 @@
             bl_bot.setVelocityY(0);
             br_bot.setVelocityY(0);
             car.setVelocityY(0)
+        }
+        if (car.x < 320 || car.x > 1000) {
+            bl.setVelocityY(100);
+            br.setVelocityY(100);
+            bl_top.setVelocityY(100);
+            br_top.setVelocityY(100);
+            bl_bot.setVelocityY(100);
+            br_bot.setVelocityY(100);
+            }
+            else{
+            bl.setVelocityY(700);
+            br.setVelocityY(700);
+            bl_top.setVelocityY(700);
+            br_top.setVelocityY(700);
+            bl_bot.setVelocityY(700);
+            br_bot.setVelocityY(700);
         }
     }
     </script>
