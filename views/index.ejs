@@ -59,6 +59,7 @@
     this.load.image('car_red', './assets/car_red_small_4.png')
     this.load.image('cone', './assets/cone_down.png')
     this.load.image('oil', './assets/oil.png')
+    this.load.image('over', './assets/over.png')
     }
 
     function create ()
@@ -82,7 +83,6 @@
         br_bot = this.physics.add.sprite(1250,950,'background_right').setScale(0.7,0.7);
         car = this.physics.add.sprite(700, 475,'green_car');
         cursors = this.input.keyboard.createCursorKeys();
-        car.setCollideWorldBounds(true);
         temp = bl.y
         accel= this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
 
@@ -173,7 +173,7 @@
       b.destroy()
       //let devId = document.getElementById('header').innerHTML;
       if(true){
-          car.setVelocityY(+60);
+          car.setVelocityY(60);
           bl.setVelocityY(0);
           br.setVelocityY(0);
           bl_top.setVelocityY(0);
@@ -263,11 +263,43 @@
         this.physics.add.collider(car, cone3);
         this.physics.add.collider(car, cone4);
         this.physics.add.collider(car, cone5);
+        this.physics.add.collider(car, cone6);
+        this.physics.add.collider(car, cone7);
+        this.physics.add.collider(car, cone8);
+        this.physics.add.collider(car, cone9);
+        this.physics.add.collider(car, cone10);
     }
 
     function update(){
 
-        if(temp + 450 <= bl.y){
+        if (car.y >= 1000){
+            this.cameras.main.shake(500);
+            this.add.image(500, 500, 'over');
+            this.time.delayedCall(1500, function() {
+                this.katyvoor.END
+            }, [], this);
+        }
+
+        if ((car.x < 50) && (!cursors.right.isDown)){
+            car.setVelocityX(0);
+            bl.setVelocityY(100);
+            br.setVelocityY(100);
+            bl_top.setVelocityY(100);
+            br_top.setVelocityY(100);
+            bl_bot.setVelocityY(100);
+            br_bot.setVelocityY(100);
+        }
+        else if ((car.x > 1350) && (!cursors.left.isDown)){
+            car.setVelocityX(0);
+            bl.setVelocityY(100);
+            br.setVelocityY(100);
+            bl_top.setVelocityY(100);
+            br_top.setVelocityY(100);
+            bl_bot.setVelocityY(100);
+            br_bot.setVelocityY(100);
+        }
+        else{
+            if(temp + 450 <= bl.y){
             bl_bot.y = bl_top.y -475;
             br_bot.y = br_top.y -475;
             swap = bl_bot;
@@ -341,6 +373,9 @@
             br_bot.setVelocityY(700);
         }
     }
+        }
+
+       
     </script>
 
 </body>
