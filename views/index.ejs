@@ -49,6 +49,12 @@
     var turnOnSpikes;
     this.load.image('spikes', './assets/spikes.png')
     this.load.image('nuke', './assets/platformIndustrial_106.png')
+    this.load.image('moto_red', './assets/motorcycle_red.png')
+    this.load.image('moto_black', './assets/motorcycle_black.png')
+    this.load.image('car_blue', './assets/car_blue_small_5.png')
+    this.load.image('car_black', './assets/car_black_small_3.png')
+    this.load.image('car_red', './assets/car_red_small_4.png')
+    this.load.image('cone', './assets/cone_down.png')
     }
 
     function create ()
@@ -90,6 +96,31 @@
             loop: true
         })
 
+        timedEvent3 = this.time.addEvent({
+            delay: 7000,
+            callback: motoRaid,
+            callbackScope: this,
+            loop: true
+        })
+        timedEvent4 = this.time.addEvent({
+            delay: 2000,
+            callback: carRaid,
+            callbackScope: this,
+            loop: true
+        })
+        timedEvent4 = this.time.addEvent({
+            delay: 2000,
+            callback: carRaid1,
+            callbackScope: this,
+            loop: true
+        })
+        timedEvent5 = this.time.addEvent({
+            delay: 5000,
+            callback: fence,
+            callbackScope: this,
+            loop: true
+        })
+
         cursors = this.input.keyboard.createCursorKeys();
 
     }
@@ -110,13 +141,62 @@
         nuke.setVelocityY(300)
         if (spikes.length > 0){
             for (var i = 0; i < spikes.length; i++){
-                spikes[i].destroy();
+             //   spikes[i].destroy();
             }
         }
-
     }
 
+    
+    function motoRaid(){
+        console.log("hello")
+        xVal = (Math.random() * 750) + 300
+        var moto = this.physics.add.sprite(xVal, -100, 'car_blue')
+        moto.setVelocityY(500)
+        this.physics.add.collider(car, moto);
+    }
 
+    function carRaid(){
+        console.log("hello")
+        xVal = (Math.random() * 750) + 300
+        var car_opp = this.physics.add.sprite(xVal, -100, 'car_black')
+        car_opp.setVelocityY(500)
+        this.physics.add.collider(car, car_opp);
+    }
+    function carRaid1(){
+        console.log("hello")
+        xVal = (Math.random() * 750) + 300
+        var car_opp = this.physics.add.sprite(xVal, -100, 'car_red')
+        car_opp.setVelocityY(1000)
+        this.physics.add.collider(car, car_opp);
+    }
+    function fence(){
+        console.log("hello")
+        var cone1 = this.physics.add.sprite(1170, -100, 'cone')
+        var cone2 = this.physics.add.sprite(1220, -100, 'cone')
+        var cone3 = this.physics.add.sprite(1270, -100, 'cone')
+        var cone4 = this.physics.add.sprite(1320, -100, 'cone')
+        var cone5 = this.physics.add.sprite(1370, -100, 'cone')
+        var cone6 = this.physics.add.sprite(30, -100, 'cone')
+        var cone7 = this.physics.add.sprite(80, -100, 'cone')
+        var cone8 = this.physics.add.sprite(130, -100, 'cone')
+        var cone9 = this.physics.add.sprite(180, -100, 'cone')
+        var cone10 = this.physics.add.sprite(230, -100, 'cone')
+        cone1.setVelocityY(200)
+        cone2.setVelocityY(200)
+        cone3.setVelocityY(200)
+        cone4.setVelocityY(200)
+        cone5.setVelocityY(200)
+        cone6.setVelocityY(200)
+        cone7.setVelocityY(200)
+        cone8.setVelocityY(200)
+        cone9.setVelocityY(200)
+        cone10.setVelocityY(200)
+        this.physics.add.collider(car, cone1);
+        this.physics.add.collider(car, cone2);
+        this.physics.add.collider(car, cone3);
+        this.physics.add.collider(car, cone4);
+        this.physics.add.collider(car, cone5);
+    }
 
     function update(){
 
